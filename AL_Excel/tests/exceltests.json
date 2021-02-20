@@ -1,0 +1,602 @@
+{
+  "COORDINATES": [
+    {
+      "definition": "A1",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": false
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": "$A$1",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": true
+        }
+      }
+    },
+    {
+      "definition": "$A1",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": false
+        },
+        "column": {
+          "value": 1,
+          "absolute": true
+        }
+      }
+    },
+    {
+      "definition": "A$1",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": "a1",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": false
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": "BB8",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 8,
+          "absolute": false
+        },
+        "column": {
+          "value": 54,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": "G100",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 100,
+          "absolute": false
+        },
+        "column": {
+          "value": 7,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": "R1C1",
+      "result": {
+        "column": {
+          "absolute": false,
+          "value": 1
+        },
+        "row": {
+          "absolute": false,
+          "value": 1
+        },
+        "type": "success"
+      }
+    },
+    {
+      "definition": "R[1]C[1]",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": true
+        }
+      }
+    },
+    {
+      "definition": "R[1]C1",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": "R1C[1]",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": false
+        },
+        "column": {
+          "value": 1,
+          "absolute": true
+        }
+      }
+    },
+    {
+      "definition": "r1c1",
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": false
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": [ 1, 1 ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": true
+        }
+      }
+    },
+    {
+      "definition": [ 1, "A" ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": [ 1, "$A" ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": true
+        }
+      }
+    },
+    {
+      "definition": [ "1", "A" ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": false
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": [ "$1", "A" ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": [ "$1", "$A" ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": true
+        }
+      }
+    },
+    {
+      "definition": [ "A", 3 ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 3,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": [ 1, "a" ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": [ "A", null ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": null,
+          "absolute": false
+        },
+        "column": {
+          "value": 1,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": [ 1, null ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": null,
+          "absolute": false
+        }
+      }
+    },
+    {
+      "definition": [ null, 1 ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": null,
+          "absolute": false
+        },
+        "column": {
+          "value": 1,
+          "absolute": true
+        }
+      }
+    },
+    {
+      "definition": [ null, "$A" ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": null,
+          "absolute": false
+        },
+        "column": {
+          "value": 1,
+          "absolute": true
+        }
+      }
+    },
+    {
+      "definition": [ 1 ],
+      "result": {
+        "type": "success",
+        "row": {
+          "value": 1,
+          "absolute": true
+        },
+        "column": {
+          "value": null,
+          "absolute": false
+        }
+      }
+    },
+
+    {
+      "definition": true,
+      "result": {
+        "type": "exception",
+        "e_type": "AttributeError",
+        "e_regex": "^Invalid values for cooridinate: "
+      }
+    },
+    {
+      "definition": false,
+      "result": {
+        "type": "exception",
+        "e_type": "AttributeError",
+        "e_regex": "^Invalid values for cooridinate: "
+      }
+    },
+    {
+      "definition": null,
+      "result": {
+        "type": "exception",
+        "e_type": "AttributeError",
+        "e_regex": "^Invalid values for cooridinate: "
+      }
+    },
+    {
+      "definition": "",
+      "result": {
+        "type": "exception",
+        "e_type": "TypeError",
+        "e_regex": "^Invalid coordinates: "
+      }
+    },
+    {
+      "definition": "Foobar",
+      "result": {
+        "type": "exception",
+        "e_type": "TypeError",
+        "e_regex": "^Invalid coordinates: "
+      }
+    },
+    {
+      "definition": "",
+      "objecttype": "lambdafactory",
+      "result": {
+        "type": "exception",
+        "e_type": "TypeError",
+        "e_regex": "^Invalid coordinates: "
+      }
+    },
+    {
+      "definition": "",
+      "objecttype": "TestObject",
+      "result": {
+        "type": "exception",
+        "e_type": "TypeError",
+        "e_regex": "^Invalid coordinates: "
+      }
+    },
+    {
+      "definition": "",
+      "objecttype": "Range",
+      "result": {
+        "type": "exception",
+        "e_type": "TypeError",
+        "e_regex": "^Invalid coordinates: "
+      }
+    },
+    {
+      "definition": [],
+      "result": {
+        "type": "exception",
+        "e_type": "AttributeError",
+        "e_regex": "^Invalid values for cooridinate: "
+      }
+    },
+    {
+      "definition": [ 1, 2, 3 ],
+      "result": {
+        "type": "exception",
+        "e_type": "AttributeError",
+        "e_regex": "^Invalid values for cooridinate: "
+      }
+    },
+    {
+      "definition": [
+        {
+          "A": true,
+          "1": false
+        }
+      ],
+      "result": {
+        "type": "exception",
+        "e_type": "AttributeError",
+        "e_regex": "^Invalid values for cooridinate: "
+      }
+    },
+    {
+      "definition": [ "A", "A" ],
+      "result": {
+        "type": "exception",
+        "e_type": "AttributeError",
+        "e_regex": "^Invalid values for cooridinate: "
+      }
+    },
+    {
+      "definition": "R1R1",
+      "result": {
+        "type": "exception",
+        "e_type": "TypeError",
+        "e_regex": "^Invalid coordinates: "
+      }
+    }
+  ],
+  "SHEETS": [
+    {
+      "alias": "sheet_CellNumbers",
+      "name": "CellNumbers"
+    },
+    {
+      "alias": "sheet_Tables1",
+      "name": "Tables1"
+    },
+    {
+      "alias": "sheet_Tables2",
+      "name": "Tables2"
+    },
+    {
+      "alias": "sheet_Tables3",
+      "name": "Tables3"
+    },
+    {
+      "alias": "sheet_Tables4",
+      "name": "Tables4"
+    }
+  ],
+
+  "SUBRANGES": {},
+
+  "RANGES": {
+    "TESTRANGE_1": {
+      "worksheet": "sheet_CellNumbers",
+      "sheet": "CellNumbers",
+      "name": "testrange_1",
+      "range": "A1:J1",
+      "row_values": [ [ "A1", "B1", "C1", "D1", "E1", "F1", "G1", "H1", "I1", "J1" ] ]
+    },
+
+    "TESTRANGE_2": {
+      "worksheet": "sheet_CellNumbers",
+      "sheet": "CellNumbers",
+      "name": "testrange_2",
+      "range": "A1:A10",
+      "row_values": [
+        [ "A1" ],
+        [ "A2" ],
+        [ "A3" ],
+        [ "A4" ],
+        [ "A5" ],
+        [ "A6" ],
+        [ "A7" ],
+        [ "A8" ],
+        [ "A9" ],
+        [ "A10" ]
+      ]
+    },
+
+    "TESTRANGE_3": {
+      "worksheet": "sheet_CellNumbers",
+      "sheet": "CellNumbers",
+      "name": "testrange_3",
+      "range": "G5:J9",
+      "row_values": [
+        [ "G5", "H5", "I5", "J5" ],
+        [ "G6", "H6", "I6", "J6" ],
+        [ "G7", "H7", "I7", "J7" ],
+        [ "G8", "H8", "I8", "J8" ],
+        [ "G9", "H9", "I9", "J9" ]
+      ]
+    },
+
+    "TESTRANGE_4": {
+      "worksheet": "sheet_CellNumbers",
+      "sheet": "CellNumbers",
+      "name": "testrange_4",
+      "range": "F6:J10",
+      "row_values": [
+        [ "F6", "G6", "H6", "I6", "J6" ],
+        [ "F7", "G7", "H7", "I7", "J7" ],
+        [ "F8", "G8", "H8", "I8", "J8" ],
+        [ "F9", "G9", "H9", "I9", "J9" ],
+        [ "F10", "G10", "H10", "I10", "J10" ]
+      ]
+    }
+  },
+
+  "TABLES": {
+    "TESTTABLE_1": {
+      "worksheet": "sheet_Tables1",
+      "sheet": "Tables1",
+      "name": "testtable_1",
+      "range": "A1:B3",
+      "headerrange": "A1:B1",
+      "datarange": "A2:B3",
+      "headers": [ "Name", "Value" ],
+      "values": [
+        [ "Hello", 1 ],
+        [ "World", 2 ]
+      ]
+    },
+
+
+    "TESTTABLE_2": {
+      "worksheet": "sheet_Tables1",
+      "sheet": "Tables1",
+      "name": "testtable_2",
+      "range": "D1:G10",
+      "headerrange": "D1:G1",
+      "datarange": "D2:G10",
+      "headers": [ "North", "East", "South", "West" ],
+      "values": [
+        [ 1, 2, 3, 4 ],
+        [ 4, 3, 2, 1 ],
+        [ 2, 4, 6, 8 ],
+        [ 1, 3, 5, 7 ],
+        [ 1, 3, 3, 7 ],
+        [ 1, 3, 3, 7 ],
+        [ 42, 42, 42, 42 ],
+        [ -15, -30, -30, -15 ],
+        [ 5, 10, 5, 10 ]
+      ]
+    },
+
+    "TESTTABLE_3": {
+      "worksheet": "sheet_Tables2",
+      "sheet": "Tables2",
+      "name": "testtable_3",
+      "range": "A1:C5",
+      "headerrange": "A1:C1",
+      "datarange": "A2:C5",
+      "headers": [ "Rock", "Paper", "Scissors" ],
+      "values": [
+        [  true,  null, false ],
+        [ false,  true,  null ],
+        [  null, false,  true ],
+        [ false, false, false ]
+      ]
+    }
+  }
+}
