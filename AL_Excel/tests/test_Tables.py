@@ -16,6 +16,9 @@ class TableTests(unittest.TestCase):
         return super().setUp()
 
     def test_get_all_tables(self):
+        ## NOTE: get_all_tables was updated to account for Chartsheets: this test virtually ensures
+        ##          that thos changes are effective as it would fail on this first line anyway, therefore
+        ##          no additional test has been added to test the change
         tables = Tables.get_all_tables(self.workbook)
         self.assertEqual(len(tables),3)
         tablelookup = {table.name:{"worksheet":worksheet,"table":table} for worksheet,table in tables}
