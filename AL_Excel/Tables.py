@@ -6,6 +6,8 @@
 from openpyxl.worksheet.table import Table, TableColumn
 from openpyxl.workbook.workbook import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
+#### Necessary for checking worksheet type
+from openpyxl.chartsheet.chartsheet import Chartsheet
 ## This Module
 from AL_Excel import Coordinate, Range
 from AL_Excel.Ranges import tuple_to_range
@@ -112,6 +114,8 @@ def get_all_tables(workbook):
     out = []
     for worksheetname in workbook.sheetnames:
         worksheet = workbook[worksheetname]
+        ## Skip Chartsheets, which cannot have tables
+        if isinstance(worksheet, Chartsheet): continue
         ## To ensure list integrity, we'll have to copy the list
         ## (Initiating Tables seems to automatically add them to _tables list)
         tables = list(worksheet._tables)
