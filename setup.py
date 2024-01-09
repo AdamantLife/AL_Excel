@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="AL_Excel",
-    version="1.0.0",
+    version="1.0.1",
     author="AdamantLife",
     author_email="",
     description="A collection of code snippets and high-level interfaces",

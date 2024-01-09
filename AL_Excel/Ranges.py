@@ -4,20 +4,28 @@
 """
 ## Super Module
 from openpyxl import utils
+from openpyxl.workbook import Workbook
+from openpyxl.worksheet.worksheet import Worksheet
+from openpyxl.cell import Cell
+
 ## This Module
 from AL_Excel import Coordinate, Index
+from AL_Excel.Coordinates import CoordinateDescriptor
+
+## Builtins
+import typing
 
 __all__ = ["NamedRange","Range"]
 
 class NamedRange():
-    def __init__(self,workbook,name):
+    def __init__(self,workbook:Workbook, name: str):
         self.workbook = workbook
         self.name = name
         if not workbook.defined_names[name]:
             raise ValueError(f'Workbook has no range named "{name}"')
         self.ranges = [Range(workbook[worksheet],_range) for worksheet,_range in workbook.defined_names[name].destinations]
 
-    def allcells(self, sort = "row"):
+    def allcells(self, sort: typing.Literal["row", "column"] = "row")-> typing.Generator[Cell,None,None]:
         """ Returns a flat list of all cells in the named range.
 
         if sort is "row" (default), the cells will be returned: first, in order
@@ -31,15 +39,17 @@ class NamedRange():
         return sum([sum([list(cells) for cells in rowcol],[]) for rowcol in cells], [])
 
 class Range():
-    def __init__(self,worksheet,range):
+    def __init__(self,worksheet: Worksheet, range: str):
         """ Creates a new Range Object
 
         worksheet is an openpyxl worksheet object
         range is a string expressing a valid, single range
         """
         self.worksheet = worksheet
-        self._startcoord, self._endcoord = None,None
-        self._masterstart, self._masterend = None,None
+        self._startcoord: Coordinate = None
+        self._endcoord: Coordinate = None
+        self._masterstart: Coordinate = None
+        self._masterend: Coordinate = None
         coords = range.split(":")
         if 0 > len(coords) > 2:
             raise AttributeError(f"Invalid Range: {range}")
@@ -49,45 +59,60 @@ class Range():
         self.updatemasters()
 
     @property
-    def startcoord(self):
+    def startcoord(self)-> Coordinate:
+        """ Returns the start coordinate of the Range"""
         return self._startcoord
     @startcoord.setter
-    def startcoord(self,value):
+    def startcoord(self,value: Coordinate|CoordinateDescriptor):
+        """ Sets the start coordinate of the Range
+        
+            value can be a Coordinate Object or a CoordinateDescriptor
+        """
         if not isinstance(value,Coordinate):
             value = Coordinate(value)
         self._startcoord = value
         self.updatemasters()
     @property
-    def endcoord(self):
+    def endcoord(self)-> Coordinate:
+        """ Returns the end coordinate of the Range """
         return self._endcoord
     @endcoord.setter
-    def endcoord(self,value):
+    def endcoord(self,value: Coordinate|CoordinateDescriptor):
+        """ Sets the end coordinate of the Range
+        
+            value can be a Coordinate Object or a CoordinateDescriptor
+        """
         if not isinstance(value,Coordinate):
             value = Coordinate(value)
         self._endcoord = value
         self.updatemasters()
 
     @property
-    def masterstart(self):
+    def masterstart(self)-> Coordinate:
+        """ Returns the start coordinate of the Range, relative to the worksheet """
         return self._masterstart
     @property
-    def masterend(self):
+    def masterend(self)-> Coordinate:
+        """ Returns the end coordinate of the Range, relative to the worksheet """
         return self._masterend
+    
     def updatemasters(self):
+        """ Updates the masterstart and masterend properties """
         c_1,r_1,c_2,r_2 = utils.cell.range_boundaries(self.range)
         self._masterstart = Coordinate(r_1,c_1)
         self._masterend = Coordinate(r_2,c_2)
 
     @property
-    def range(self):
+    def range(self)-> str:
+        """ Returns the range as an Excel-style string """
         return f"{self.startcoord.toA1string()}:{self.endcoord.toA1string()}"
 
     @property
-    def range_boundaries(self):
+    def range_boundaries(self) -> typing.Tuple[int, int, int, int]:
         """ Returns the results of openpyxl.utils.cell.range_boundaries, which is a tuple (min_col, min_row, max_col, max_row) """
         return utils.cell.range_boundaries(self.range)
 
-    def rows_from_range(self,attribute = "value"):
+    def rows_from_range(self,attribute: typing.Literal["value","address","cell"] = "value")-> typing.Generator[typing.Generator[Cell,None,None],None,None]:
         """ Returns cell property per openpyxl.utils.cell.rows_from_range
         
         If attribute is "address," functions as openpyxl.utils.cell.rows_from_range
@@ -99,7 +124,7 @@ class Range():
             return (map(lambda cell: self.worksheet[cell], row) for row in utils.cell.rows_from_range(self.range))
         return (map(lambda cell: getattr(self.worksheet[cell],attribute), row) for row in utils.cell.rows_from_range(self.range))
 
-    def columns_from_range(self, attribute = "value"):
+    def columns_from_range(self, attribute: typing.Literal["value","address","cell"]= "value")-> typing.Generator[typing.Generator[Cell,None,None],None,None]:
         """Returns cell property per openpyxl.utils.cell.rows_from_range
         
         If attribute is "address," functions as openpyxl.utils.cell.cols_from_range
@@ -110,35 +135,35 @@ class Range():
             return (map(lambda cell: self.worksheet[cell], column) for column in utils.cell.cols_from_range(self.range))
         return (map(lambda cell: getattr(self.worksheet[cell],attribute), column) for column in utils.cell.cols_from_range(self.range))
 
-    def cells_by_row(self,attribute = "value"):
+    def cells_by_row(self,attribute: typing.Literal["value","address","cell"] = "value")-> typing.Generator[Cell,None,None]:
         """ Returns a flat list of cells based on rows_from_range
         
         attribute is the same as rows_from_range
         """
         return (cell for row in list(self.rows_from_range(attribute=attribute)) for cell in row)
 
-    def cells_by_column(self,attribute = "value"):
+    def cells_by_column(self,attribute: typing.Literal["value","address","cell"] = "value")-> typing.Generator[Cell,None,None]:
         """ Returns a flat list of cells based on columns_from_range
         
         attribute is the same as rows_from_range
         """
         return (cell for column in list(self.columns_from_range(attribute=attribute)) for cell in column)
 
-    def row(self,index,attribute = "value"):
+    def row(self,index,attribute: typing.Literal["value","address","cell"] = "value")-> typing.Generator[Cell,None,None]:
         """ Returns the row with the provided zero-index, via rows_from_range """
         return list(self.rows_from_range(attribute=attribute))[index]
 
-    def column(self,index,attribute = "value"):
+    def column(self,index,attribute: typing.Literal["value","address","cell"] = "value")-> typing.Generator[Cell,None,None]:
         """ Returns the column with the provided zero-index, via columns_from_range """
         return list(self.columns_from_range(attribute=attribute))[index]
 
-    def isinrange(self,cell):
+    def isinrange(self,cell: Cell)-> bool:
         """ Returns whether the cell is in the Range """
         coord = Coordinate(cell.coordinate)
         return (self.masterstart.column <= coord.column <= self.masterend.column)\
             and (self.masterstart.row <= coord.row <= self.masterend.row)
 
-    def coordinatetocell(self,coordinate):
+    def coordinatetocell(self, coordinate: Coordinate) -> Cell:
         """ Converts a Coordinate (which may be relative) to a Cell (which is absolute) based on the first index of the range """
         ## Note that range_boundaries is a CR pattern rather than RC
         if not coordinate.isabsolute():
@@ -156,7 +181,7 @@ class Range():
                 coordinate._column = Index("column",column,True)
         return self.worksheet.cell(row = coordinate.row, column = coordinate.column)
 
-    def subrange(self,start = None, end = None):
+    def subrange(self,start: Coordinate|CoordinateDescriptor = None, end: Coordinate|CoordinateDescriptor = None)-> "Range":
         """ Returns a new Range Object that is a slice of this Range Object
 
         Takes both start and end. start and end should be appropriate coordinates:
@@ -203,25 +228,23 @@ class Range():
 
         return Range(self.worksheet,f"{start.column_letter}{start.row}:{end.column_letter}{end.row}")
 
-    def __eq__(self,other):
+    def __eq__(self,other: "Range")-> bool:
         if isinstance(other,Range):
             return self.worksheet == other.worksheet and self.startcoord == other.startcoord and self.endcoord == other.endcoord
+        
+    def __add__(self, other: typing.Tuple[int|None, int|None]):
+        return self.endcoord + other
 
     def __repr__(self):
         return f"{self.__class__.__name__}({self.range})"
 
-def tuple_to_range(*trange, absolute = False):
+def tuple_to_range(trange:typing.Tuple[int|str, int|str, int|str, int|str]|list[int|str, int|str, int|str, int|str], absolute:bool = False)-> str:
     """ Returns an Excel-version (A1 notation) string representing the given range.
         
-        The tuple should be 1-indexed, can be passed as a single length-4 tuple or as 4 positional arguments,
-        and should represent (startcolumn, startrow, endcolumn, endrow).
+        The tuple should be 1-indexed and should represent (startcolumn, startrow, endcolumn, endrow).
 
         The absolute keyword determines whether the returned range is absolute (default False).
     """
-    if len(trange) == 1:
-        trange = trange[0]
-    if len(trange) != 4:
-        raise ValueError("tuple range should be length 4.")
     c1,r1,c2,r2 = trange
     if absolute:
         c1,r1,c2,r2 = int(c1),int(r1),int(c2),int(r2)
@@ -231,7 +254,7 @@ def tuple_to_range(*trange, absolute = False):
     start,end = Coordinate(r1,c1),Coordinate(r2,c2)
     return f"{start.toA1string()}:{end.toA1string()}"
 
-def get_named_cell(workbook, name):
+def get_named_cell(workbook: Workbook, name:str)-> Cell:
     """ Resolves the given name as a NamedRange and if the NamedRange only has one Range
         with one Cell, it will return that cell.
         

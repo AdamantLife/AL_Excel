@@ -112,11 +112,10 @@ class MethodCase(unittest.TestCase):
         """ Tests various values for tuple_to_range """
         for test,absolute,result in [(  (1,1,1,1),  False,  "A1:A1" ),
                                      (  (1,1,1,1),  True,  "$A$1:$A$1" ),
-                                     (  ((1,1,1,1),),  False,  "A1:A1" ),
-                                     (  ((1,1,1,1),),  True,  "$A$1:$A$1" ),
+                                     ## NOTE: tuple_to_range no longer accepts trange as individual positional arguments
                             ]:
             with self.subTest(test = test, result = result, absolute = absolute):
-                self.assertEqual(tuple_to_range(*test, absolute = absolute),result)
+                self.assertEqual(tuple_to_range(test, absolute = absolute),result)
 
 
     def test_gettablesize(self):
