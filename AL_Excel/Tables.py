@@ -3,13 +3,16 @@
     Provides an "EnhancedTable" Subclass class which extends the functionality of normal Tables
 """
 ## Super Module
+import typing
 from openpyxl.worksheet.table import Table, TableColumn
 from openpyxl.workbook.workbook import Workbook
 from openpyxl.worksheet.worksheet import Worksheet
+from openpyxl.cell import Cell
 #### Necessary for checking worksheet type
 from openpyxl.chartsheet.chartsheet import Chartsheet
 ## This Module
 from AL_Excel import Coordinate, Range
+from AL_Excel.Coordinates import CoordinateDescriptor
 from AL_Excel.Ranges import tuple_to_range
 ## Builtin
 import collections
@@ -19,7 +22,7 @@ __all__ = ["EnhancedTable",]
 
 class EnhancedTable(Table):
     """ A better Table Class, returned by get_all_tables """
-    def from_table(table,worksheet):
+    def from_table(table: Table, worksheet: Worksheet)-> "EnhancedTable":
         def oldversion():
             ## NOTE! (oldversion) It seems that Initializing a Table object (which EnhancedTable is a subclass of) automatically adds the table to the Worksheet's _tables list
             ## This means that we have to check and remove the original Table object, and should return any pre-built EnhancedTable we find.
@@ -44,35 +47,49 @@ class EnhancedTable(Table):
                              tableBorderDxfId=table.tableBorderDxfId, totalsRowBorderDxfId=table.totalsRowBorderDxfId, headerRowCellStyle=table.headerRowCellStyle, dataCellStyle=table.dataCellStyle,
                              totalsRowCellStyle=table.totalsRowCellStyle, connectionId=table.connectionId, autoFilter=table.autoFilter, sortState=table.sortState, tableColumns=table.tableColumns,
                              tableStyleInfo=table.tableStyleInfo, extLst=table.extLst)
-    def __init__(self,worksheet, **kw):
-        self.worksheet = None
+    
+    def __init__(self,worksheet: Worksheet, **kw):
+        self.worksheet: Worksheet = None
         super().__init__(**kw)
         self.worksheet = worksheet
-        self.range = Range(worksheet,self.ref)
+        self.range: Range = Range(worksheet,self.ref)
         ## For the moment, we are disabling this functionality
         ## The serializer on Table seems to be serializing other attributes
         ## self.worksheet.add_table(self)
 
     @property
-    def ref(self):
+    def ref(self)-> str:
+        """ Returns the table's range as a string """
         return self.range.range
+    
     @ref.setter
-    def ref(self,value):
+    def ref(self, value: str):
+        """ Sets the table's range to the given value"""
         self.range = Range(self.worksheet,value)
 
-    def insertcolumn(self,index = None,columnname = None):
+    def insertcolumn(self,index: int = None, columnname: str = None)-> None:
+        """ Inserts a column into the table at the given index, with the given name.
+            If no index is given, the column is inserted at the end of the table.
+            If no name is given, the column is named "Column{index}"
+
+            Parameters:
+                index: int = None
+                columnname: str = None
+
+            Returns: None
+        """
         collen = len(self.tableColumns)
         if index is None:
             index = collen - 1
         if index >= collen: raise ValueError("Index outside of Table Range")
         if columnname is None:
             columnname = f"Column{collen}"
-        if columname in [column.name for column in self.tableColumns]:
+        if columnname in [column.name for column in self.tableColumns]:
             columnname = columnname + " 2"
         self.tableColumns.insert(index,TableColumn(id=collen,name=columnname))
         self.range += [1,None]
 
-    def headers(self, attribute = "value"):
+    def headers(self, attribute: typing.Literal["value","address","cell"] = "value")-> list[str|Cell|Coordinate]:
         """ Returns the headers of the EnhancedTable as a list, via self.range.row """
         ## Last row (equal to row count) should contain actual headers... In theory
         ## And we zero-index it
@@ -83,20 +100,20 @@ class EnhancedTable(Table):
         """ Adds a set of headers to the table at the bottom of the header range """
         headerlen = len(headers)               
 
-    def headerrange(self):
+    def headerrange(self)-> Range:
         """ Returns the Table's headers as a Range object """
         headerlength = self.headerRowCount
         columnlength = len(self.tableColumns)
         return self.range.subrange(None,(str(headerlength-1),str(columnlength-1)))
 
-    def datarange(self):
+    def datarange(self)-> Range:
         """ Returns the Table's body as a Range object """
         headerlength = self.headerRowCount
         columnlength = len(self.tableColumns)
         return self.range.subrange(
             (str(headerlength),str(0)),None)
 
-    def todicts(self,keyfactory = None):
+    def todicts(self,keyfactory: typing.Callable = None)-> list[collections.OrderedDict]:
         """ Converts all data rows to dicts based on column headers. The first element of the returned list is a list of the header strings used.
         
         keyfactory is an callback function to modify the keys (example- the lowerstrip lambda available in this module executes
@@ -109,7 +126,7 @@ class EnhancedTable(Table):
         data.insert(0,headers)
         return data
 
-def get_all_tables(workbook):
+def get_all_tables(workbook: Workbook)-> list[tuple[Worksheet,EnhancedTable]]:
     """ Returns a list of tuples of all tables in the workbook formatted: (worksheetobject, EnhancedTable Object) """
     out = []
     for worksheetname in workbook.sheetnames:
@@ -131,7 +148,7 @@ def get_all_tables(workbook):
                 out.append((worksheet,EnhancedTable.from_table(table,worksheet)))
     return out
 
-def get_table_by_name(source,name):
+def get_table_by_name(source: Workbook|Worksheet, name: str)-> EnhancedTable:
     """ Returns the table with the given displayName.
 
         source should be a Worksheet or Workbook.
@@ -168,7 +185,8 @@ def get_table_by_name(source,name):
     if isinstance(table,EnhancedTable): return table
     return EnhancedTable.from_table(table,sheet)
 
-def dicts_to_table(sheet, dinput, tablename = None, start = None, headers = None):
+def dicts_to_table(sheet: Worksheet, dinput: list[list|dict], tablename: str = None,
+                   start: Coordinate|CoordinateDescriptor = None, headers: list[str]|None = None)-> EnhancedTable:
     """ Writes a list of dictionaries or lists into a Table.
   
         sheet should be a Worksheet.
@@ -268,7 +286,8 @@ def dicts_to_table(sheet, dinput, tablename = None, start = None, headers = None
     table = EnhancedTable.from_table(table,sheet)
     return table
 
-def gettablesize(sheet,startcolumn,startrow, absolute = False, greedycolumns = False, greedyrows = False):
+def gettablesize(sheet: Worksheet, startcolumn: int, startrow: int, absolute: bool = False,
+                 greedycolumns: bool = False, greedyrows: bool = False)-> Range:
     """ This is a function to intuit the shape of a data series which is laid out in a table format.
 
         It works by assuming the top row to be the header row. It scans this row until it reaches a blank cell.
@@ -325,4 +344,4 @@ def gettablesize(sheet,startcolumn,startrow, absolute = False, greedycolumns = F
         else: norow = 0
     ## Current Row does not have value
     endrow = row - norow
-    return tuple_to_range(startcolumn,startrow,endcolumn,endrow, absolute = absolute)
+    return tuple_to_range((startcolumn,startrow,endcolumn,endrow), absolute = absolute)
