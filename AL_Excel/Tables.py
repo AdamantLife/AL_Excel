@@ -49,9 +49,8 @@ class EnhancedTable(Table):
                              tableStyleInfo=table.tableStyleInfo, extLst=table.extLst)
     
     def __init__(self,worksheet: Worksheet, **kw):
-        self.worksheet: Worksheet = None
-        super().__init__(**kw)
         self.worksheet = worksheet
+        super().__init__(**kw)
         self.range: Range = Range(worksheet,self.ref)
         ## For the moment, we are disabling this functionality
         ## The serializer on Table seems to be serializing other attributes
@@ -113,18 +112,26 @@ class EnhancedTable(Table):
         return self.range.subrange(
             (str(headerlength),str(0)),None)
 
-    def todicts(self,keyfactory: typing.Callable = None)-> list[collections.OrderedDict]:
+    def todicts(self,keyfactory: typing.Callable = None, attrubute: typing.Literal["value","address","cell"] = "value")-> list[collections.OrderedDict]:
         """ Converts all data rows to dicts based on column headers. The first element of the returned list is a list of the header strings used.
         
         keyfactory is an callback function to modify the keys (example- the lowerstrip lambda available in this module executes
         key.lower().replace(" ","_") to lowercase and remove spaces in keys).
+        attribute is the same as the attribute parameter in Range.rows_from_range.
         """
         if keyfactory is None: keyfactory = lambda key: key
         headers = [keyfactory(key) for key in self.headers()]
 
-        data = [collections.OrderedDict(list(zip(headers,row))) for row in self.datarange().rows_from_range()]
+        data = [collections.OrderedDict(list(zip(headers,row))) for row in self.datarange().rows_from_range(attribute=attrubute)]
         data.insert(0,headers)
         return data
+    
+    def getcolumnnumberbyheader(self, name: str, keyfactory: typing.Callable = None)-> int|None:
+        """ Returns the column number with the given name or None if not found. """
+        for cell in self.headers("cell"):
+            if (keyfactory(cell.value) if keyfactory else cell.value) == name:
+                return cell.column
+        return None
 
 def get_all_tables(workbook: Workbook)-> list[tuple[Worksheet,EnhancedTable]]:
     """ Returns a list of tuples of all tables in the workbook formatted: (worksheetobject, EnhancedTable Object) """
