@@ -112,7 +112,7 @@ class EnhancedTable(Table):
         return self.range.subrange(
             (str(headerlength),str(0)),None)
 
-    def todicts(self,keyfactory: typing.Callable = None, attrubute: typing.Literal["value","address","cell"] = "value")-> list[collections.OrderedDict]:
+    def todicts(self,keyfactory: typing.Callable = None, attribute: typing.Literal["value","address","cell"] = "value")-> list[collections.OrderedDict]:
         """ Converts all data rows to dicts based on column headers. The first element of the returned list is a list of the header strings used.
         
         keyfactory is an callback function to modify the keys (example- the lowerstrip lambda available in this module executes
@@ -122,7 +122,7 @@ class EnhancedTable(Table):
         if keyfactory is None: keyfactory = lambda key: key
         headers = [keyfactory(key) for key in self.headers()]
 
-        data = [collections.OrderedDict(list(zip(headers,row))) for row in self.datarange().rows_from_range(attribute=attrubute)]
+        data = [collections.OrderedDict(list(zip(headers,row))) for row in self.datarange().rows_from_range(attribute=attribute)]
         data.insert(0,headers)
         return data
     
