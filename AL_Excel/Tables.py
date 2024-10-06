@@ -132,27 +132,35 @@ class EnhancedTable(Table):
             if (keyfactory(cell.value) if keyfactory else cell.value) == name:
                 return cell.column
         return None
+    
+def get_tables_in_worksheet(worksheet: Worksheet)-> list[tuple[Worksheet, EnhancedTable]]:
+    """ Returns a list of tuples of all tables ina worksheet formattted: (worksheetobject, EnhancedTable Object) """
+    out: list[tuple[Worksheet, EnhancedTable]] = []
+    ## To ensure list integrity, we'll have to copy the list
+    ## (Initiating Tables seems to automatically add them to _tables list)
+    tables = list(worksheet._tables)
+    for table in tables:
+        ## New version of openpyxl changes worksheet._tables to a dict subclass
+        if isinstance(table, str):
+            table = worksheet._tables[table]
+        ## Check if it was pre-converted and return it if so
+        if isinstance(table,EnhancedTable):
+            out.append((worksheet,table))
+        ## Otherwise, convert it ourselves
+        else:
+            out.append((worksheet,EnhancedTable.from_table(table,worksheet)))
+    return out
+
 
 def get_all_tables(workbook: Workbook)-> list[tuple[Worksheet,EnhancedTable]]:
     """ Returns a list of tuples of all tables in the workbook formatted: (worksheetobject, EnhancedTable Object) """
-    out = []
+    out: list[tuple[Worksheet, EnhancedTable]] = []
     for worksheetname in workbook.sheetnames:
         worksheet = workbook[worksheetname]
         ## Skip Chartsheets, which cannot have tables
         if isinstance(worksheet, Chartsheet): continue
-        ## To ensure list integrity, we'll have to copy the list
-        ## (Initiating Tables seems to automatically add them to _tables list)
-        tables = list(worksheet._tables)
-        for table in tables:
-            ## New version of openpyxl changes worksheet._tables to a dict subclass
-            if isinstance(table, str):
-                table = worksheet._tables[table]
-            ## Check if it was pre-converted and return it if so
-            if isinstance(table,EnhancedTable):
-                out.append((worksheet,table))
-            ## Otherwise, convert it ourselves
-            else:
-                out.append((worksheet,EnhancedTable.from_table(table,worksheet)))
+        results = get_tables_in_worksheet(worksheet)
+        out.extend(results)
     return out
 
 def get_table_by_name(source: Workbook|Worksheet, name: str)-> EnhancedTable:
